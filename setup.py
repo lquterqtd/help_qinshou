@@ -10,5 +10,11 @@ options = {
 }
 setup(
     options=options,
-    console=["sort_product.py"]
+    zipfile=None,
+    console=[{
+        "script": "sort_product.py",
+        "icon_resources": [(
+            1, "logo.ico"
+        )]
+    }]
 )
