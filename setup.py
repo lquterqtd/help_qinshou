@@ -10,5 +10,5 @@ options = {
 }
 setup(
     options=options,
-    console=["get_order_info.py"]
+    console=["sort_product.py"]
 )

@@ -4,13 +4,13 @@ import urllib
 import urllib2
 from xml.etree import ElementTree
 
-def read_xml(order_info):
+def read_xml(order_info, order_id):
     order_info = order_info.replace("\">", "\"/>")
     get_response = ElementTree.fromstring(order_info)
     error_info = get_response.find("error")
     all_item = []
     if error_info.text == None:
-        output_info("查询订单信息成功，详细信息如下：")
+        output_info("查询订单%s信息成功，详细信息如下：" % order_id)
         for item in get_response.iter("Item"):
             output_info(item.attrib, 1)
             all_item.append(item.attrib)
@@ -38,9 +38,9 @@ def get_order_info(order_id):
         output_info("连接失败，请检查网络是否正常")
         return []
     if order_info.code == 200:
-        return read_xml(order_info.read())
+        return read_xml(order_info.read(), order_id)
     else:
-        output_info("code:%d" % order_info.code)
+        output_info("查询订单信息失败")
         return []
 
 def output_info(info, type=0):
@@ -51,7 +51,7 @@ def output_info(info, type=0):
     if type == 0:
         print info
     elif type == 1:
-        print u"产品名称:%s 属性:%s 产品编号:%s 重量:%s 数量:%s" % (
+        print u"产品名称:%-50s 属性:%-30s 产品编号:%-20s 重量:%-8s 数量:%-5s" % (
             info["ProductName"], info["Property"], info["ProductNum"],
             info["Weight"], info["Quantity"]
             )
