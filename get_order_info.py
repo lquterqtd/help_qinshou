@@ -1,5 +1,5 @@
 __author__ = 'olly'
-#coding:utf-8
+#coding:cp936
 import urllib
 import urllib2
 from xml.etree import ElementTree
@@ -10,13 +10,13 @@ def read_xml(order_info, order_id):
     error_info = get_response.find("error")
     all_item = []
     if error_info.text == None:
-        output_info("æŸ¥è¯¢è®¢å•%sä¿¡æ¯æˆåŠŸï¼Œè¯¦ç»†ä¿¡æ¯å¦‚ä¸‹ï¼š" % order_id)
+        output_info("²éÑ¯¶©µ¥%sĞÅÏ¢³É¹¦£¬ÏêÏ¸ĞÅÏ¢ÈçÏÂ£º" % order_id)
         for item in get_response.iter("Item"):
             output_info(item.attrib, 1)
             all_item.append(item.attrib)
         return all_item
     else:
-        output_info("æ¡å½¢ç ä¸å­˜åœ¨")
+        output_info("ÌõĞÎÂë²»´æÔÚ")
         return []
 
 def check_order_id(order_id):
@@ -25,60 +25,60 @@ def check_order_id(order_id):
     return True
 
 def get_order_id():
-    return raw_input("è¯·è¾“å…¥è®¢å•å·ï¼š")
+    return raw_input("ÇëÊäÈë¶©µ¥ºÅ£º")
 
 def get_order_info(order_id):
     """
-    è¾“å…¥è®¢å•å·ï¼Œè·å¾—è®¢å•çš„ä¿¡æ¯ï¼Œè¿”å›è§£æåçš„å­—å…¸
+    ÊäÈë¶©µ¥ºÅ£¬»ñµÃ¶©µ¥µÄĞÅÏ¢£¬·µ»Ø½âÎöºóµÄ×Öµä
     """
     url = "http://top.xgw.so/getorderinfo.aspx?barcode=" + order_id
     try:
         order_info = urllib.urlopen(url)
     except:
-        output_info("è¿æ¥å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œæ˜¯å¦æ­£å¸¸")
+        output_info("Á¬½ÓÊ§°Ü£¬Çë¼ì²éÍøÂçÊÇ·ñÕı³£")
         return []
     if order_info.code == 200:
         return read_xml(order_info.read(), order_id)
     else:
-        output_info("æŸ¥è¯¢è®¢å•ä¿¡æ¯å¤±è´¥")
+        output_info("²éÑ¯¶©µ¥ĞÅÏ¢Ê§°Ü")
         return []
 
 def output_info(info, type=0):
     """
-    0 --- å­—ç¬¦ä¸²
-    1 --- äº§å“ä¿¡æ¯
+    0 --- ×Ö·û´®
+    1 --- ²úÆ·ĞÅÏ¢
     """
     if type == 0:
         print info
     elif type == 1:
-        print u"äº§å“åç§°:%-50s å±æ€§:%-30s äº§å“ç¼–å·:%-20s é‡é‡:%-8s æ•°é‡:%-5s" % (
+        print u"²úÆ·Ãû³Æ:%-50s ÊôĞÔ:%-30s ²úÆ·±àºÅ:%-20s ÖØÁ¿:%-8s ÊıÁ¿:%-5s" % (
             info["ProductName"], info["Property"], info["ProductNum"],
             info["Weight"], info["Quantity"]
             )
 
 def get_barcode():
-    return raw_input("æ‰«ææ¡å½¢ç ï¼š")
+    return raw_input("É¨ÃèÌõĞÎÂë£º")
 
 def check_barcode(barcode):
     return True
 
 def get_product_info_by_barcode(barcode):
-    return {'ProductName': u'åŒ—æç»’ Uå‡¸æ¬¾è«ä»£å°”ç”·å£«å†…è£¤', 'Property': u'XL|ç°è‰²', 'ProductNum': 'B9801', 'Weight': '0.12', 'Quantity': '1'}
+    return {'ProductName': u'±±¼«ÈŞ UÍ¹¿îÄª´ú¶ûÄĞÊ¿ÄÚ¿ã', 'Property': u'XL|»ÒÉ«', 'ProductNum': 'B9801', 'Weight': '0.12', 'Quantity': '1'}
 
 def get_product_info():
-    output_info("å¼€å§‹æ‰«ææ¡å½¢ç ï¼Œç›´æ¥æŒ‰å›è½¦ç»“æŸï¼š")
+    output_info("¿ªÊ¼É¨ÃèÌõĞÎÂë£¬Ö±½Ó°´»Ø³µ½áÊø£º")
     local_prodocut_info = []
     while True:
         barcode = get_barcode()
         if len(barcode) == 0:
             return local_prodocut_info
         if not check_barcode(barcode):
-            output_info("æ¡å½¢ç ä¸æ­£ç¡®")
+            output_info("ÌõĞÎÂë²»ÕıÈ·")
             continue
         else:
             product = get_product_info_by_barcode(barcode)
             if len(product) == 0:
-                output_info("è·å¾—ä¿¡æ¯å‡ºé”™ï¼Œè¯·é‡è¯•")
+                output_info("»ñµÃĞÅÏ¢³ö´í£¬ÇëÖØÊÔ")
             else:
                 output_info(product, 1)
                 local_prodocut_info.append(product)
@@ -86,15 +86,15 @@ def get_product_info():
 
 def compare_info(order_info, local_prodocut_info):
     output_info("----------------------------------------------------------------")
-    output_info("æ‰«æçš„äº§å“ä¿¡æ¯åˆ—è¡¨ï¼š")
+    output_info("É¨ÃèµÄ²úÆ·ĞÅÏ¢ÁĞ±í£º")
     for l_item in local_prodocut_info:
         output_info(l_item, 1)
     output_info("----------------------------------------------------------------")
-    output_info("è®¢å•ä¸­çš„äº§å“åˆ—è¡¨ï¼š")
+    output_info("¶©µ¥ÖĞµÄ²úÆ·ÁĞ±í£º")
     for r_item in order_info:
         output_info(r_item, 1)
     output_info("----------------------------------------------------------------")
-    output_info("å¼€å§‹è¿›è¡ŒåŒ¹é…......")
+    output_info("¿ªÊ¼½øĞĞÆ¥Åä......")
     matched_items = []
     for l_item in local_prodocut_info:
         for r_item in order_info:
@@ -107,11 +107,11 @@ def compare_info(order_info, local_prodocut_info):
                 r_item["Quantity"] = str(quantity)
                 if quantity == 0:
                     order_info.remove(r_item)
-    output_info("ç»“æœï¼š")
+    output_info("½á¹û£º")
     if len(order_info) == 0:
-        output_info("åŒ¹é…æˆåŠŸï¼")
+        output_info("Æ¥Åä³É¹¦£¡")
     else:
-        output_info("ä¸å®Œå…¨åŒ¹é…ï¼ŒæœªåŒ¹é…äº§å“åˆ—è¡¨ä¸ºï¼š")
+        output_info("²»ÍêÈ«Æ¥Åä£¬Î´Æ¥Åä²úÆ·ÁĞ±íÎª£º")
         for r_item in order_info:
             output_info(r_item, 1)
         output_info("----------------------------------------------------------------")
@@ -119,7 +119,7 @@ def compare_info(order_info, local_prodocut_info):
 def process():
     order_id = get_order_id()
     if not check_order_id(order_id):
-        output_info("è®¢å•å·ä¸æ­£ç¡®")
+        output_info("¶©µ¥ºÅ²»ÕıÈ·")
         return False
     order_info = get_order_info(order_id)
     if len(order_info) == 0:
