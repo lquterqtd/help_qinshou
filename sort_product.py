@@ -22,15 +22,15 @@ def sort_all_order_info(all_order_info):
     for product in distinct_product_list:
         quantity = all_order_info.count(product)
         product["Quantity"] = quantity
-        output_info(product, 1)
-        output_info("-----数量：%d" % (all_order_info.count(product)))
+        #output_info(product, 1)
+        #output_info("-----数量：%d" % (all_order_info.count(product)))
     #准备对distinct_product_list进行排序
 
     classified_product_list = {}
     for prefix in Specified_Order:
         classified_product_list[prefix] = []
         pattern = '^' + prefix
-        for product in all_order_info:
+        for product in distinct_product_list:
             m = re.match(pattern, product["ProductNum"])
             if m:
                 classified_product_list[prefix].append(product)
