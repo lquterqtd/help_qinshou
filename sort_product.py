@@ -34,7 +34,7 @@ def sort_all_order_info(all_order_info):
             m = re.match(pattern, product["ProductNum"])
             if m:
                 classified_product_list[prefix].append(product)
-                all_order_info.remove(product)
+                distinct_product_list.remove(product)
         classified_product_list[prefix].sort(cmp=lambda x,y:cmp(x.get('ProductNum'), y.get('ProductNum')))
 
     output_info("-------------" * 10)
