@@ -13,7 +13,12 @@ Specified_Order = (
 )
 
 def sort_all_order_info(all_order_info):
-    distinct_product_list = set(all_order_info)
+    #获得不含重复元素的订单序列
+    distinct_product_list = []
+    for x in all_order_info:
+        if x not in distinct_product_list:
+            distinct_product_list.append(x)
+
     for product in distinct_product_list:
         quantity = all_order_info.count(product)
         product["Quantity"] = quantity
