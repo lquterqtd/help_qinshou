@@ -3,6 +3,7 @@ __author__ = 'Administrator'
 
 from get_order_info import output_info, get_order_info, read_xml, get_order_id
 import re
+from GenPDF import GenPDF
 
 Specified_Order = (
     '03', 'B1', 'B9', '04', '09', '01',
@@ -11,6 +12,8 @@ Specified_Order = (
     'PM001', 'PM00', 'B08', 'WB', 'B26', 'B32',
     'B25', 'B36', 'B41'
 )
+
+FILENAME = "Result.pdf"
 
 def sort_all_order_info(all_order_info):
     #获得不含重复元素的订单序列
@@ -52,6 +55,7 @@ def sort_all_order_info(all_order_info):
     for prefix in Specified_Order:
         for product in classified_product_list[prefix]:
             output_info(product, 1)
+    return classified_product_list
 def get_all_order_info(all_order_id):
     all_order_info = []
     for id in all_order_id:
@@ -75,7 +79,15 @@ def get_all_order_id():
 def process():
     all_order_id = get_all_order_id()
     all_order_info = get_all_order_info(all_order_id)
-    sort_all_order_info(all_order_info)
+    classified_product_list = sort_all_order_info(all_order_info)
+    output_info("-------------" * 10)
+    output_info('开始生成清单的PDF文件......')
+    try:
+        GenPDF(FILENAME, classified_product_list, Specified_Order)
+    except IOError, e:
+        output_info(FILENAME + '已经被打开，请关闭后重试！')
+    else:
+        output_info('清单已生成在当前目录' + FILENAME + '文件中，请打开查看')
     output_info("-------------" * 10)
 
 def main():
