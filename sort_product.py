@@ -15,16 +15,26 @@ Specified_Order = (
 def sort_all_order_info(all_order_info):
     #获得不含重复元素的订单序列
     distinct_product_list = []
-    for x in all_order_info:
-        if x not in distinct_product_list:
-            distinct_product_list.append(x)
+    #比较时不看数量
+    import copy
+    all_order_info_copy = copy.deepcopy(all_order_info)
+    all_order_info_copy_distinct = []
+    for item in all_order_info_copy:
+        del item["Quantity"]
+    for x in all_order_info_copy:
+        if x not in all_order_info_copy_distinct:
+            all_order_info_copy_distinct.append(x)
 
-    for product in distinct_product_list:
-        quantity = all_order_info.count(product)
-        product["Quantity"] = quantity
-        #output_info(product, 1)
-        #output_info("-----数量：%d" % (all_order_info.count(product)))
-    #准备对distinct_product_list进行排序
+    for x in all_order_info_copy_distinct:
+        x["Quantity"] = 0
+
+    for y in all_order_info_copy_distinct:
+        for x in all_order_info:
+            if x["ProductName"] == y["ProductName"] and x["Property"] == y["Property"] and \
+               x["Weight"] == y["Weight"] and x["ProductNum"] == y["ProductNum"]:
+                y["Quantity"] = y["Quantity"] + int(x["Quantity"])
+
+    distinct_product_list = all_order_info_copy_distinct
 
     classified_product_list = {}
     for prefix in Specified_Order:
@@ -34,7 +44,7 @@ def sort_all_order_info(all_order_info):
             m = re.match(pattern, product["ProductNum"])
             if m:
                 classified_product_list[prefix].append(product)
-                distinct_product_list.remove(product)
+                #distinct_product_list.remove(product)
         classified_product_list[prefix].sort(cmp=lambda x,y:cmp(x.get('ProductNum'), y.get('ProductNum')))
 
     output_info("-------------" * 10)
