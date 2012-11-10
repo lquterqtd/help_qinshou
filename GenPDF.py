@@ -31,6 +31,7 @@ from reportlab.platypus import *
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
+from reportlab.lib.enums import TA_CENTER
 
 MyFont = 'simsun.ttc'
 MyFontName = 'song'
@@ -44,6 +45,8 @@ def GenPDF(filename, classified_product_list, Specified_Order):
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(filename)
     styles['Title'].fontName = MyFontName
+    styles['Normal'].wordWrap = 'CJK'
+    styles['Normal'].alignment = TA_CENTER
     elements.append(Paragraph(my_convert("清单"), styles['Title']))
     data = [
         [my_convert('货号'), my_convert('商品名称'), my_convert('颜色'), my_convert('尺码'), my_convert('数量'), my_convert('分配')]
@@ -54,11 +57,11 @@ def GenPDF(filename, classified_product_list, Specified_Order):
             temp = []
             temp.append(product['ProductNum'])
             temp.append(product['ProductName'])
-            str = product['Property'].split('|')
-            temp.append(str[1])
-            temp.append(str[0])
-            temp.append(product['Quantity'])
-            temp.append(product['DistributionStr'])
+            t_str = product['Property'].split('|')
+            temp.append(t_str[1])
+            temp.append(t_str[0])
+            temp.append(str(product['Quantity']))
+            temp.append(Paragraph(product['DistributionStr'], styles['Normal']))
             data.append(temp)
 
     table = Table(
@@ -69,9 +72,9 @@ def GenPDF(filename, classified_product_list, Specified_Order):
     )
     table.setStyle(TableStyle([
         ('FONT', (0,0), (-1,-1), MyFontName),
-        ('ALIGN', (0,0), (5,0), 'CENTER'),
+        ('ALIGN', (0,0), (-1,0), 'CENTER'),
         ('ALIGN', (0,1), (1,-1), 'LEFT'),
-        ('ALIGN', (2,1), (5,-1), 'CENTER'),
+        ('ALIGN', (2,1), (-1,-1), 'CENTER'),
         ('GRID', (0,0), (-1,-1), 1, colors.black),
     ]))
     elements.append(table)
