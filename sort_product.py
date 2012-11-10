@@ -13,8 +13,36 @@ Specified_Order = (
     'B25', 'B36', 'B41'
     )
 
+Bag_Seqence = (
+    'A1', 'A2', 'A3', 'A4',
+    'B1', 'B2', 'B3', 'B4',
+    'C1', 'C2', 'C3', 'C4',
+    'D1', 'D2', 'D3', 'D4',
+    'A5', 'A6', 'A7', 'A8',
+    'B5', 'B6', 'B7', 'B8',
+    'C5', 'C6', 'C7', 'C8',
+    'D5', 'D6', 'D7', 'D8'
+    )
+
 FILENAME = "Result.pdf"
 
+def distributed_products(classified_product_list, all_order_info):
+    output_info("-----分配结果：")
+    for p_left in classified_product_list:
+        temp = []
+        distribution_str = ''
+        for p_right in all_order_info:
+            if p_right["ProductNum"] == p_left["ProductNum"] and \
+                p_right["ProductName"] == p_left["ProductName"] and \
+                p_right["Property"] == p_left["Property"]:
+                temp.append(p_right)
+
+        for item in temp:
+            distribution_str = distribution_str + '%s->%s,' % (item["Quantity"], item["Bag"])
+        #去掉最后一个多余的逗号
+        distribution_str = distribution_str[0:-1]
+        p_left["DistributionStr"] = distribution_str
+        output_info('%s:%s:%s' % (p_left["ProductNum"], p_left["Property"], p_left["DistributionStr"]))
 def sort_all_order_info(all_order_info):
     #获得不含重复元素的订单序列
     distinct_product_list = []
@@ -34,10 +62,12 @@ def sort_all_order_info(all_order_info):
     for y in all_order_info_copy_distinct:
         for x in all_order_info:
             if x["ProductName"] == y["ProductName"] and x["Property"] == y["Property"] and \
-               x["Weight"] == y["Weight"] and x["ProductNum"] == y["ProductNum"]:
+                x["Weight"] == y["Weight"] and x["ProductNum"] == y["ProductNum"]:
                 y["Quantity"] = y["Quantity"] + int(x["Quantity"])
 
     distinct_product_list = all_order_info_copy_distinct
+
+    distributed_products(distinct_product_list, all_order_info)
 
     classified_product_list = {}
     for prefix in Specified_Order:
@@ -58,10 +88,13 @@ def sort_all_order_info(all_order_info):
     return classified_product_list
 def get_all_order_info(all_order_id):
     all_order_info = []
+    loop = 0
     for id in all_order_id:
         s_order_info = get_order_info(id)
         for item in s_order_info:
+            item["Bag"] = Bag_Seqence[loop]
             all_order_info.append(item)
+        loop = loop + 1
     return  all_order_info
 
 def get_all_order_id():

@@ -46,7 +46,7 @@ def GenPDF(filename, classified_product_list, Specified_Order):
     styles['Title'].fontName = MyFontName
     elements.append(Paragraph(my_convert("清单"), styles['Title']))
     data = [
-        [my_convert('货号'), my_convert('商品名称'), my_convert('颜色'), my_convert('尺码'), my_convert('数量')]
+        [my_convert('货号'), my_convert('商品名称'), my_convert('颜色'), my_convert('尺码'), my_convert('数量'), my_convert('分配')]
     ]
 
     for prefix in Specified_Order:
@@ -58,19 +58,20 @@ def GenPDF(filename, classified_product_list, Specified_Order):
             temp.append(str[1])
             temp.append(str[0])
             temp.append(product['Quantity'])
+            temp.append(product['DistributionStr'])
             data.append(temp)
 
     table = Table(
         data=data,
         colWidths=[
-            2.75 * cm, 10.0 * cm, 2.75 * cm, 2.5 * cm, 1.0 * cm
+            2.75 * cm, 7.5 * cm, 2.75 * cm, 2.5 * cm, 1.0 * cm, 2.5 * cm
         ]
     )
     table.setStyle(TableStyle([
         ('FONT', (0,0), (-1,-1), MyFontName),
-        ('ALIGN', (0,0), (4,0), 'CENTER'),
+        ('ALIGN', (0,0), (5,0), 'CENTER'),
         ('ALIGN', (0,1), (1,-1), 'LEFT'),
-        ('ALIGN', (2,1), (4,-1), 'CENTER'),
+        ('ALIGN', (2,1), (5,-1), 'CENTER'),
         ('GRID', (0,0), (-1,-1), 1, colors.black),
     ]))
     elements.append(table)
