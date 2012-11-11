@@ -14,14 +14,14 @@ Specified_Order = (
     )
 
 Bag_Seqence = (
-    'A1', 'A2', 'A3', 'A4',
-    'B1', 'B2', 'B3', 'B4',
-    'C1', 'C2', 'C3', 'C4',
-    'D1', 'D2', 'D3', 'D4',
-    'A5', 'A6', 'A7', 'A8',
-    'B5', 'B6', 'B7', 'B8',
-    'C5', 'C6', 'C7', 'C8',
-    'D5', 'D6', 'D7', 'D8'
+    'A1', 'A2', 'A3',
+    'B1', 'B2', 'B3',
+    'C1', 'C2', 'C3',
+    'D1', 'D2', 'D3',
+    'A5', 'A6', 'A7',
+    'B5', 'B6', 'B7',
+    'C5', 'C6', 'C7',
+    'D5', 'D6', 'D7'
     )
 
 FILENAME = "Result.pdf"
@@ -52,6 +52,7 @@ def sort_all_order_info(all_order_info):
     all_order_info_copy_distinct = []
     for item in all_order_info_copy:
         del item["Quantity"]
+        del item["Bag"]
     for x in all_order_info_copy:
         if x not in all_order_info_copy_distinct:
             all_order_info_copy_distinct.append(x)
